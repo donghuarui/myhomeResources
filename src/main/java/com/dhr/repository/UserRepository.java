@@ -12,4 +12,7 @@ public interface UserRepository extends BaseRepository<User,String> {
            @Query("update User u set u.username = :username,u.password = :password where u.id = :id")
            @Modifying
            Integer modifyUser(@Param("username") String username,@Param("password") String password, @Param("id") String id);
+
+           @Query(value = "from User where username = ?")
+           User findUserByUsername(String username);
 }

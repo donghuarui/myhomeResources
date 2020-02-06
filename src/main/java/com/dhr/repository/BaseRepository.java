@@ -19,4 +19,6 @@ public interface BaseRepository<E extends BaseEntity, ID extends Serializable> e
     Page<E> findPageByValid(Pageable pageable, Character valid);
 
     void deleteByIdIn(String[] ids);
+
+    Object findOne(String id);
 }

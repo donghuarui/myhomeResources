@@ -26,7 +26,7 @@ public class UserServiceTest {
         user.setUsername("ezreal");
         List<User> users = userService.tiaojian(user);
         for (User newuser : users) {
-            System.out.print(newuser);
+            System.out.print(newuser.getId());
         }
         System.err.print(users.size());
     }

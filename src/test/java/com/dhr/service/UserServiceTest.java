@@ -1,13 +1,11 @@
 package com.dhr.service;
 
 import com.dhr.entity.User;
-import com.dhr.service.impl.UserServiceImpl;
+import org.springframework.data.domain.Sort;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringRunner;
-
 import javax.annotation.Resource;
 import java.util.List;
 

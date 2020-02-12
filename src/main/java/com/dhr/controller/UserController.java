@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import com.dhr.entity.User;
 
+import java.util.Map;
+
 /**
  * Class description
  *
@@ -88,7 +90,7 @@ public class UserController extends BaseController {
      * @return
      */
     @RequestMapping(value = "register")
-    public User register(User user) {
+    public Map<String, Object> register(User user) {
         return userService.register(user);
     }
 

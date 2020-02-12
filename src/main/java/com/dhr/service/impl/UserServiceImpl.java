@@ -20,15 +20,14 @@ import com.dhr.repository.UserRepository;
 /**
  * Class description
  *
- *
- * @version        $version$, $date$, 18/12/16
- * @author         donghuarui.
+ * @author donghuarui.
+ * @version $version$, $date$, 18/12/16
  */
 @Service
 @Transactional(
-    rollbackFor = Exception.class
+        rollbackFor = Exception.class
 )
-public class UserServiceImpl extends BaseServiceImpl<User,UserRepository> implements UserService{
+public class UserServiceImpl extends BaseServiceImpl<User, UserRepository> implements UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
@@ -37,31 +36,27 @@ public class UserServiceImpl extends BaseServiceImpl<User,UserRepository> implem
     /**
      * Method description
      *
-     *
      * @param user
-     *
      * @return
      */
     @Override
     public Integer changeOne(User user) {
-        return repository.modifyUser(user.getUsername(), user.getPassword(), user.getId());
+        return repository.modifyUser(user.getUsername(), user.getId());
     }
 
     /**
      * Method description
      *
-     *
      * @param user
-     *
      * @return
      */
     @Override
     public User login(User user) {
         User userTemp = repository.findByUsernameAndPassword(user.getUsername(), user.getPassword());
         String uniqueToken = UUID.randomUUID().toString();
-        if(null != userTemp){
-            redisUtil.set(USER_REDIS_SESSION+userTemp.getId(),uniqueToken);
-            System.err.print(redisUtil.hasKey("myname"));
+        if (null != userTemp) {
+            redisUtil.set(USER_REDIS_SESSION + userTemp.getId(), uniqueToken);
+            //System.err.print(redisUtil.hasKey("myname"));
         }
         return userTemp;
     }
@@ -69,33 +64,28 @@ public class UserServiceImpl extends BaseServiceImpl<User,UserRepository> implem
     /**
      * 注册
      *
-     *
      * @param user
-     *
      * @return
      */
     @Override
-    public User register(User user) {
-        User temp = new User();
-        temp.setUsername(user.getUsername());
-        List<User> userlist = findListByExample(temp);
-        System.err.print(userlist.size());
-        if(userlist.size()==0){
-            User uu =  repository.save(user);
-            System.err.print(uu);
-            return uu;
-        }else {
-            return null;
+    public Map<String, Object> register(User user) {
+        List<User> userlist = findListByExample(user);
+        Map<String, Object> map = new HashMap<>();
+        if (userlist.size() == 0) {
+            User new_user = repository.save(user);
+            map.put("status", true);
+            map.put("msg", new_user.getId());
+        } else {
+            map.put("status", false);
+            map.put("msg", "该用户名已被占用");
         }
-
+        return map;
     }
 
     /**
      * Method description
      *
-     *
      * @param user
-     *
      * @return
      */
     @Override
@@ -116,7 +106,7 @@ public class UserServiceImpl extends BaseServiceImpl<User,UserRepository> implem
         Specification spec = new Specification() {
             @Override
             public Predicate toPredicate(Root root, CriteriaQuery criteriaQuery, CriteriaBuilder criteriaBuilder) {
-                return criteriaBuilder.equal(root.get("username"),user.getUsername());
+                return criteriaBuilder.equal(root.get("username"), user.getUsername());
             }
         };
         return repository.findAll(spec);
@@ -126,9 +116,7 @@ public class UserServiceImpl extends BaseServiceImpl<User,UserRepository> implem
     /**
      * 获取所有用户
      *
-     *
      * @param page
-     *
      * @return
      */
     @Override

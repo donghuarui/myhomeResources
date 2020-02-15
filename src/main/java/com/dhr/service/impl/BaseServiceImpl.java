@@ -2,10 +2,15 @@ package com.dhr.service.impl;
 
 import java.util.List;
 
+import com.dhr.entity.User;
 import com.dhr.repository.redisutil.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
@@ -16,10 +21,6 @@ import com.dhr.service.BaseService;
 
 /**
  * Class description
- *
- *
- *
- *
  * @version        $version$, $date$, 18/12/16
  * @author         donghuarui.
  */
@@ -79,6 +80,16 @@ public class BaseServiceImpl<E extends BaseEntity, R extends BaseRepository> imp
     }
 
     @Override
+    public Page<User> getAll(Pageable page) {
+        return repository.findAll(page);
+    }
+
+    @Override
+    public List<User> getAll(Sort sort) {
+        return repository.findAll(sort);
+    }
+
+    @Override
     public List<E> findListByExample(E e) {
         Example<E> example = Example.of(e);
 
@@ -104,7 +115,6 @@ public class BaseServiceImpl<E extends BaseEntity, R extends BaseRepository> imp
      * @param e
      */
     protected void preSave(E e) {
-
         // 新增
         if (StringUtils.isEmpty(e.getId()) ||!repository.exists(e.getId())) {
             e.setCreatorId(authProvider.getCurrentUserId());

@@ -8,6 +8,7 @@ import com.dhr.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -33,40 +34,22 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserRepository> imple
 
     public static final String USER_REDIS_SESSION = "user:redis:session:";
 
-    /**
-     * Method description
-     *
-     * @param user
-     * @return
-     */
     @Override
     public Integer changeOne(User user) {
+        super.preSave(user);
         return repository.modifyUser(user.getUsername(), user.getId());
     }
 
-    /**
-     * Method description
-     *
-     * @param user
-     * @return
-     */
     @Override
     public User login(User user) {
         User userTemp = repository.findByUsernameAndPassword(user.getUsername(), user.getPassword());
         String uniqueToken = UUID.randomUUID().toString();
         if (null != userTemp) {
             redisUtil.set(USER_REDIS_SESSION + userTemp.getId(), uniqueToken);
-            //System.err.print(redisUtil.hasKey("myname"));
         }
         return userTemp;
     }
 
-    /**
-     * 注册
-     *
-     * @param user
-     * @return
-     */
     @Override
     public Map<String, Object> register(User user) {
         List<User> userlist = findListByExample(user);
@@ -82,12 +65,6 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserRepository> imple
         return map;
     }
 
-    /**
-     * Method description
-     *
-     * @param user
-     * @return
-     */
     @Override
     public List<User> tiaojian(User user) {
         Specification spec = new Specification() {
@@ -112,29 +89,51 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserRepository> imple
         return repository.findAll(spec);
     }
 
-
-    /**
-     * 获取所有用户
-     *
-     * @param page
-     * @return
-     */
     @Override
-    public Page<User> getAll(Pageable page) {
-        Page<User> res = repository.findAll(page);
-//        redisTemplate.opsForValue().set("myname",666);
-//        String s = redisTemplate.opsForValue().get("dubbo")+"";
-//        String a =   redisTemplate.opsForHash().get("dubbo","name")+"";
-//         Map<Object,Object> map = redisTemplate.opsForHash().entries("dubbo");
-//        System.out.println(map);
-//        System.err.print(s);
-//        logger.info(s);
-        return res;
+    public List<User> tiaojian3(User user) {
+        return repository.findAll((root, query, cb) -> cb.equal(root.get("username"), user.getUsername()));
     }
 
     @Override
-    public List<User> getAll(Sort sort) {
-        return repository.findAll(sort);
+    public List<User> tiaojian4(User user) {
+        Specification spe = new Specification() {
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                return getPredicate(user, root, criteriaBuilder);
+            }
+        };
+        return repository.findAll(spe);
+    }
+
+    @Override
+    public List<User> tiaojian5(User user) {
+        return repository.findAll(((root, criteriaQuery, criteriaBuilder) -> getPredicate(user, root, criteriaBuilder)));
+    }
+
+    /**
+     * 组装条件
+     * @param user
+     * @param root
+     * @param criteriaBuilder
+     * @return
+     */
+    private Predicate getPredicate(User user, Root<User> root, CriteriaBuilder criteriaBuilder) {
+        Predicate predicate = criteriaBuilder.conjunction();
+        List<Expression<Boolean>> expressions = predicate.getExpressions();
+        if (3 > 1) {
+            expressions.add(criteriaBuilder.like(root.get("username"), user.getUsername() + "%"));
+        }
+        if (2 > 0) {
+            expressions.add(criteriaBuilder.equal(root.get("valid"), user.getValid()));
+        }
+        return predicate;
+    }
+
+    @Override
+    public Page<User> getAll(Integer pageNum, Integer pageSize, String sortParams) {
+        Sort sort = new Sort(Sort.Direction.DESC, sortParams);
+        PageRequest pr = new PageRequest(pageNum - 1, pageSize, sort);
+        return repository.findAll(pr);
     }
 
     @Override

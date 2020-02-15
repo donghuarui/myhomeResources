@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
 import javax.annotation.Resource;
 import java.util.List;
 
@@ -23,8 +24,20 @@ public class UserServiceTest {
         User user = new User();
         user.setUsername("ezreal");
         List<User> users = userService.tiaojian(user);
+        users.forEach(u -> System.out.println(u.getId()));
+        System.err.print(users.size());
+    }
+
+    /**
+     * 单条件查询equal
+     */
+    @Test
+    public void tiaojian2() {
+        User user = new User();
+        user.setUsername("ezreal");
+        List<User> users = userService.tiaojian2(user);
         for (User newuser : users) {
-            System.out.print(newuser.getId());
+            System.out.print(newuser);
         }
         System.err.print(users.size());
     }
@@ -33,13 +46,12 @@ public class UserServiceTest {
      * 单条件查询equal
      */
     @Test
-    public void tiaojian2(){
+    public void tiaojian4() {
         User user = new User();
-        user.setUsername("ezreal");
-        List<User> users = userService.tiaojian2(user);
-        for (User newuser : users) {
-            System.out.print(newuser);
-        }
+        user.setUsername("ez");
+        user.setValid('1');
+        List<User> users = userService.tiaojian4(user);
+        users.forEach(System.out::println);
         System.err.print(users.size());
     }
 
@@ -58,9 +70,9 @@ public class UserServiceTest {
     @Test
     public void getAllBySort() {
         //如果多个添加的排序  用 Order order = new Order(Sort.Direction.ASC, "createTime") 然后放到Sort里面
-        Sort sort = new Sort(Sort.Direction.ASC, "createTime");
+        Sort sort = new Sort(Sort.Direction.ASC, "updateTime");
         List<User> users = userService.getAll(sort);
-        for(User user : users){
+        for (User user : users) {
             System.err.print(user);
         }
     }

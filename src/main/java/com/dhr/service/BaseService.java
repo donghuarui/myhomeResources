@@ -3,6 +3,10 @@ package com.dhr.service;
 import java.util.List;
 
 import com.dhr.entity.BaseEntity;
+import com.dhr.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 /**
  * Interface description
@@ -57,6 +61,24 @@ public interface BaseService<E extends BaseEntity> {
      * @return
      */
     List<E> findAll();
+
+    /**
+     * 分页查询
+     *
+     *
+     * @param page
+     *
+     * @return
+     */
+    Page<User> getAll(Pageable page);
+
+
+    /**
+     * 排序查询
+     * @param sort
+     * @return
+     */
+    List<User> getAll(Sort sort);
 
     /**
      * 根据Example查询列表

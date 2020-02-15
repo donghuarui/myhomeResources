@@ -14,7 +14,7 @@ import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
-import com.dhr.util.MyHandlerMethodReturnValueHandler;
+import com.dhr.component.MyHandlerMethodReturnValueHandler;
 
 /**
  * 配置静态资源

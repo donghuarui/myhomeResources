@@ -14,15 +14,16 @@ import java.util.Map;
 /**
  * Class description
  *
- *
- * @version        $version$, $date$, 18/12/15
- * @author         donghuarui.
+ * @author donghuarui.
+ * @version $version$, $date$, 18/12/15
  */
 @RestController
 @RequestMapping("/user")
 public class UserController extends BaseController {
 
-    /** Field description */
+    /**
+     * Field description
+     */
     @Autowired
     private UserService userService;
 
@@ -30,9 +31,7 @@ public class UserController extends BaseController {
     /**
      * Method description
      *
-     *
      * @param user
-     *
      * @return
      */
     @RequestMapping(value = "changeOne")
@@ -43,9 +42,7 @@ public class UserController extends BaseController {
     /**
      * 根据id删除一个用户
      *
-     *
      * @param id
-     *
      * @return
      */
     @RequestMapping(value = "deleteOne")
@@ -58,9 +55,7 @@ public class UserController extends BaseController {
     /**
      * 根据id查找一个用户
      *
-     *
      * @param id
-     *
      * @return
      */
     @RequestMapping(value = "findOne")
@@ -71,9 +66,7 @@ public class UserController extends BaseController {
     /**
      * 登录
      *
-     *
      * @param user
-     *
      * @return
      */
     @RequestMapping(value = "login")
@@ -84,9 +77,7 @@ public class UserController extends BaseController {
     /**
      * 注册
      *
-     *
      * @param user
-     *
      * @return
      */
     @RequestMapping(value = "register")
@@ -97,14 +88,11 @@ public class UserController extends BaseController {
     /**
      * 分页查询用户
      *
-     *
-     *
      * @return
      */
     @RequestMapping("getAll")
     public Page<User> getAll(Integer pageNum, Integer pageSize) {
-        Pageable pageable = new PageRequest(pageNum-1,pageSize);
-        Page<User> page =  userService.getAll(pageable);
+        Page<User> page = userService.getAll(pageNum, pageSize, "updateTime");
         return page;
     }
 }

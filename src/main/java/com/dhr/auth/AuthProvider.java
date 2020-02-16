@@ -4,13 +4,12 @@ package com.dhr.auth;
 /**
  * Interface description
  *
-* @author        donghaurui
+ * @author donghaurui
  */
 public interface AuthProvider {
 
     /**
      * Method description
-     *
      *
      * @return
      */

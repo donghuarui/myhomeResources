@@ -76,4 +76,14 @@ public class UserServiceTest {
             System.err.print(user);
         }
     }
+
+    @Test
+    public void modifyUser() {
+        User user = new User();
+        user.setId("4028826e704777e50170477866100000");
+        user.setUsername("donghauruiddd");
+        user.setValid('1');
+        Integer status = userService.changeOne(user);
+        System.err.println(status);
+    }
 }

@@ -35,7 +35,12 @@ public class UserController extends BaseController {
      * @return
      */
     @RequestMapping(value = "changeOne")
-    public Integer changeOne(User user) {
+    public Integer changeOne(String username,String id,Character valid) {
+        User user = new User();
+        user.setValid(valid);
+        user.setUsername(username);
+        user.setId(id);
+        System.err.println(user);
         return userService.changeOne(user);
     }
 

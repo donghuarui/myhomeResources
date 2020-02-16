@@ -3,10 +3,12 @@ package com.dhr.service.impl;
 import java.util.*;
 
 import javax.persistence.criteria.*;
+import javax.servlet.http.HttpSession;
 
 import com.dhr.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -33,11 +35,13 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserRepository> imple
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     public static final String USER_REDIS_SESSION = "user:redis:session:";
+    @Autowired
+    private HttpSession session;
 
     @Override
     public Integer changeOne(User user) {
         super.preSave(user);
-        return repository.modifyUser(user.getUsername(), user.getId());
+        return repository.modifyUser(user.getUsername(), user.getValid(), user.getId(), user.getUpdaterId());
     }
 
     @Override
@@ -45,6 +49,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserRepository> imple
         User userTemp = repository.findByUsernameAndPassword(user.getUsername(), user.getPassword());
         String uniqueToken = UUID.randomUUID().toString();
         if (null != userTemp) {
+            session.setAttribute("userId", userTemp.getId());
             redisUtil.set(USER_REDIS_SESSION + userTemp.getId(), uniqueToken);
         }
         return userTemp;
@@ -52,10 +57,10 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserRepository> imple
 
     @Override
     public Map<String, Object> register(User user) {
-        List<User> userlist = findListByExample(user);
+        List<User> userlist = super.findListByExample(user);
         Map<String, Object> map = new HashMap<>();
         if (userlist.size() == 0) {
-            User new_user = repository.save(user);
+            User new_user = super.save(user);
             map.put("status", true);
             map.put("msg", new_user.getId());
         } else {
@@ -112,6 +117,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, UserRepository> imple
 
     /**
      * 组装条件
+     *
      * @param user
      * @param root
      * @param criteriaBuilder

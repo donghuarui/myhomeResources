@@ -108,6 +108,18 @@ public class BaseEntity {
     public void setValid(Character valid) {
         this.valid = valid;
     }
+
+    @Override
+    public String toString() {
+        return "BaseEntity{" +
+                "id='" + id + '\'' +
+                ", valid=" + valid +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                ", creatorId='" + creatorId + '\'' +
+                ", updaterId='" + updaterId + '\'' +
+                '}';
+    }
 }
 
 

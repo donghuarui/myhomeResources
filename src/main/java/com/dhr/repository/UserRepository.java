@@ -68,7 +68,7 @@ public interface UserRepository extends BaseRepository<User, String> {
 
     //以下是更新操作
 
-    @Query("update User u set u.username = :username where u.id = :id")
+    @Query("update User u set u.username = :username , u.valid = :valid , u.updaterId = :updaterId where u.id = :id")
     @Modifying
-    Integer modifyUser(@Param("username") String username, @Param("id") String id);
+    Integer modifyUser(@Param("username") String username, @Param("valid") Character valid, @Param("id") String id, @Param("updaterId") String updaterId);
 }

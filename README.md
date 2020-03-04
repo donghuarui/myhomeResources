@@ -29,3 +29,11 @@ September, Sep.
 October, Oct.
 November, Nov.
 December, Dec.
+
+
+2020年3月4日10:42:42
+gitignore 忽略不生效的问题  
+博客地址: https://blog.csdn.net/jack_nichao/article/details/76382782
+git rm -r --cached .
+git add .
+git commit -m 'update .gitignore'
